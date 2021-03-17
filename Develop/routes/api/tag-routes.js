@@ -19,9 +19,10 @@ router.get('/', (req, res) => {
   
 });
 
+// Get find a single tag by its `id`
+// be sure to include its associated Product data
 router.get('/:id', (req, res) => {
-  // find a single tag by its `id`
-  // be sure to include its associated Product data
+  
   Tag.findOne({
     where: {
       id: req.params.id
@@ -39,7 +40,7 @@ router.get('/:id', (req, res) => {
 });
 
 router.post('/', (req, res) => {
-  // create a new tag
+  // Post create a new tag
   Tag.create({
     tag_name: req.body.tag_name
   })

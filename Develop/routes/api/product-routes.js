@@ -1,5 +1,7 @@
 const router = require('express').Router();
+const { eq } = require('sequelize/types/lib/operators');
 const { Product, Category, Tag, ProductTag } = require('../../models');
+const { post } = require('./category-routes');
 
 // The `/api/products` endpoint
 
@@ -57,6 +59,7 @@ router.get('/:id', (req, res) => {
 
 // create new product
 router.post('/', (req, res) => {
+  
   /* req.body should look like this...
     {
       product_name: "Basketball",
@@ -131,6 +134,22 @@ router.put('/:id', (req, res) => {
 
 router.delete('/:id', (req, res) => {
   // delete one product by its `id` value
+  Product.destroy({
+    where: {
+      id: req.params.id
+    }
+  })
+  .then(updatedProductTags => {
+    if (updatedProductTags) {
+      res.status(404).json({ message: 'No post found with this id'});
+      return;
+    }
+    res.json(updatedProductTags);
+  })
+  .catch(err => {
+    console.log(err);
+    res.status(500).json(err);
+  });
 });
 
 module.exports = router;
