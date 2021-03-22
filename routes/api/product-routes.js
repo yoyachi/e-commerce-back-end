@@ -1,7 +1,7 @@
 const router = require('express').Router();
-const { eq } = require('sequelize/types/lib/operators');
+//const { eq } = require('sequelize/types/lib/operators');
 const { Product, Category, Tag, ProductTag } = require('../../models');
-const { post } = require('./category-routes');
+//const { post } = require('./category-routes');
 
 // The `/api/products` endpoint
 
@@ -71,7 +71,9 @@ router.post('/', (req, res) => {
   Product.create(req.body)
     .then((product) => {
       // if there's product tags, we need to create pairings to bulk create in the ProductTag model
-      if (req.body.tagIds.length) {
+      if (req.body.tagIds.lenght) {
+        // req.body.tagIds=JSON.parse(req.body.tagIds)
+        // console.log(req.body.tagIds)
         const productTagIdArr = req.body.tagIds.map((tag_id) => {
           return {
             product_id: product.id,
@@ -139,17 +141,17 @@ router.delete('/:id', (req, res) => {
       id: req.params.id
     }
   })
-  .then(updatedProductTags => {
-    if (updatedProductTags) {
-      res.status(404).json({ message: 'No post found with this id'});
-      return;
-    }
-    res.json(updatedProductTags);
-  })
-  .catch(err => {
-    console.log(err);
-    res.status(500).json(err);
-  });
+    .then(productData => {
+      if (!productData) {
+        res.status(404).json({ message: 'No Product found with that ID.' });
+        return;
+      }
+      res.json(productData);
+    })
+    .catch(err => {
+      console.log(err);
+      res.status(500).json(err);
+    });
 });
 
 module.exports = router;
